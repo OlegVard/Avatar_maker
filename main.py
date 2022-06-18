@@ -4,14 +4,16 @@ import cv2
 
 def big_pixels(img_path, mask):
     img = np.array(cv2.imread(img_path))
+    new_h = (img.shape[0] // mask - 1) * mask
+    new_w = (img.shape[1] // mask - 1) * mask
     img_out = np.zeros_like(img)
-    for i in range(0, img.shape[0] - mask[0], mask[0]):
-        for j in range(0, img.shape[1] - mask[1], mask[1]):
-            r = np.mean(img[i:i+mask[0], j:j+mask[1], 0])
-            g = np.mean(img[i:i+mask[0], j:j+mask[1], 1])
-            b = np.mean(img[i:i+mask[0], j:j+mask[1], 2])
-            img_out[i:i+mask[0], j:j+mask[1]] = [r, g, b]
-    cv2.imwrite('pix_av.jpg', img_out)
+    for i in range(0, img.shape[0] - mask, mask):
+        for j in range(0, img.shape[1] - mask, mask):
+            r = np.mean(img[i:i+mask, j:j+mask, 0])
+            g = np.mean(img[i:i+mask, j:j+mask, 1])
+            b = np.mean(img[i:i+mask, j:j+mask, 2])
+            img_out[i:i+mask, j:j+mask] = [r, g, b]
+    cv2.imwrite('pix_av.jpg', img_out[0:new_h, 0:new_w, :])
 
 
 def bound(img_path):
@@ -68,4 +70,4 @@ def array_eq(img_shape, kernel):
     return True
 
 
-big_pixels('eg.jpg', [100, 50])
+big_pixels('og.jpg', 15)
